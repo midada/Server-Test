@@ -42,11 +42,13 @@ def login(driver,username,password):
     driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
     
     try:
+        #get nickname
+        nickname = driver.find_element_by_xpath("//ul/li[@id='ttbar-login']/a[1]").text
+        print("您成功登陆京东账户,您的昵称为：{0}".format(nickname))        
+    except:
         msg = driver.find_element_by_xpath("//div[@class='msg-error']").text    
         if msg is not None:
             print(msg)
-    except:
-        print("Login Success")
             
 class TestEnvironment(unittest.TestCase):
 
@@ -59,28 +61,28 @@ class TestEnvironment(unittest.TestCase):
 class TestLogin(TestEnvironment):
 
     def test_login_valid(self):
-        """ The input TestData: correct username and password. """
+        """ 1. correct username and password. """
         login(self.driver,valid_username,valid_password)
 
     def test_login_valid_max(self):
-        """ The input TestData: MaxLength username and password. """
+        """ 2. MaxLength username and password. """
         login(self.driver,valid_max_username,valid_max_password)
 
     def test_login_valid_min(self):
-        """ The input TestData: MinLength username and password.  """
+        """ 3. MinLength username and password.  """
         login(self.driver,valid_min_username,valid_min_password)
         
     def test_login_empty(self):
-        """ The input TestData: Null or Empty """
+        """ 4. Null or Empty """
         username,password = " "," "
         login(self.driver,username,password)
 
     def test_login_validuser(self):
-        """ The input TestData: Correct username, wrong password. """
+        """ 5. Correct username, wrong password. """
         login(self.driver,valid_username,invalid_random_password)
 
     def test_login_passwd_input_count(self):
-        """ The input TestData:：多次输入错误密码，验证错误密码上限 """
+        """ 6. 多次输入错误密码，验证错误密码上限. """
         for count in range(passwd_input_limits_count):
             login(self.driver,valid_username,invalid_random_password)
 
