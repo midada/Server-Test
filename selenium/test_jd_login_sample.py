@@ -40,7 +40,14 @@ def login(driver,username,password):
     driver.find_element_by_xpath("//div/input[@id='loginname']").send_keys(username)
     driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
     driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
-
+    
+    try:
+        msg = driver.find_element_by_xpath("//div[@class='msg-error']").text    
+        if msg is not None:
+            print(msg)
+    except:
+        print("Login Success")
+            
 class TestEnvironment(unittest.TestCase):
 
     def setUp(self):
