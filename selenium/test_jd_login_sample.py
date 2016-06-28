@@ -45,19 +45,18 @@ def login(driver,check_element,username,password):
     driver.find_element_by_xpath("//div/input[@id='loginname']").send_keys(username)
     driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
     driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
- 
+    print("------------------------------------------------------------------")
     try:
         text = driver.find_element_by_xpath(check_element).text       
         assert text is not None
     except NoSuchElementException:
-        print(u" -> Message: Unable to locate element: < 'method':'xpath','selector':{0} >"
-                .format(check_element))
+        print(u"-> 没有定位到元素.请检查测试输入数据或重新定位元素.")
     except:
         text = driver.find_element_by_xpath(check_element).text 
-        print(u" ->   Test_Input: {0},{1} \n\tTest_Run,return: {2} \n\tTest_Results_judge: 不符合预期结果,测试失败." \
+        print(u"-> Test_Input: {0},{1} \n  Test_Run,return: {2} \n  Test_Results_judge: 不符合预期结果,测试失败." \
                      .format(username,password,text))
     else:
-        print(u" ->   Test_Input: {0},{1} \n\tTest_Run,return: {2} \n\tTest_Results_judge: 符合预期结果,测试通过." \
+        print(u"-> Test_Input: {0},{1} \n  Test_Run,return: {2} \n  Test_Results_judge: 符合预期结果,测试通过." \
                      .format(username,password,text)) 
             
 class TestEnvironment(unittest.TestCase):
