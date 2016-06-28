@@ -49,6 +49,7 @@ def login(driver,check_element,username,password):
         text = driver.find_element_by_xpath(check_element).text       
         assert text is not None
     except:
+        text = driver.find_element_by_xpath(check_element).text 
         print(u" -> Test_Input: {0},{1} \n\tTest_Run,return: {2} \n\tTest_Results_judge: 不符合预期结果,测试失败." \
                     .format(username,password,text))
     else:
