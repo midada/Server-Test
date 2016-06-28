@@ -18,15 +18,20 @@ url = 'https://passport.jd.com/new/login.aspx'
 username_max_length = 20
 username_min_length = 4
 passwd_max_length = 20
-passwd_min_length = 4
+passwd_min_length = 6
 
 #set username and password
-valid_username = " "
-valid_password = " "
-valid_max_username = " "
-valid_max_password = " "
-valid_min_username = " "
-valid_min_password = " "
+valid_username = "18501185504"
+valid_password = "abc!@#"
+valid_max_username = "test2016201720182019"
+valid_max_password = "2016201720182019test"
+valid_min_username = "te_1"
+valid_min_password = "abc!@#"
+
+#use xpath element
+element_msg_error = "//div[@class='msg-error']"
+element_nickname = "//ul/li[@id='ttbar-login']/a[1]"
+
 
 #错误数据
 invalid_random_password = ''.join(random.sample(valid_password,len(valid_password)))
@@ -34,21 +39,24 @@ invalid_random_password = ''.join(random.sample(valid_password,len(valid_passwor
 #密码错误The input TestData:次数限制
 passwd_input_limits_count = 6
 
+def judge_results(driver,element,username,password):
+    try:
+        text = driver.find_element_by_xpath(element).text       
+        assert text is not None
+    except:
+        print(u" -> Test_Input: {0},{1} \n\tTest_Run,return: {2} \n\tTest_Results_judge: 不符合预期结果,测试失败." \
+                    .format(username,password,text))
+    else:
+        print(u" -> Test_Input: {0},{1} \n\tTest_Run,return: {2} \n\tTest_Results_judge: 符合预期结果,测试通过." \
+                    .format(username,password,text)) 
+
 def login(driver,username,password):
     driver.get(url)
     assert "京东-欢迎登录" in driver.title
     driver.find_element_by_xpath("//div/input[@id='loginname']").send_keys(username)
     driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
     driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
-    
-    try:
-        #get nickname
-        nickname = driver.find_element_by_xpath("//ul/li[@id='ttbar-login']/a[1]").text
-        print("您成功登陆京东账户,您的昵称为：{0}".format(nickname))        
-    except:
-        msg = driver.find_element_by_xpath("//div[@class='msg-error']").text    
-        if msg is not None:
-            print(msg)
+ 
             
 class TestEnvironment(unittest.TestCase):
 
@@ -63,28 +71,46 @@ class TestLogin(TestEnvironment):
     def test_login_valid(self):
         """ 1. correct username and password. """
         login(self.driver,valid_username,valid_password)
+        judge_results(self.driver,element_nickname,valid_username,valid_password)
 
     def test_login_valid_max(self):
         """ 2. MaxLength username and password. """
         login(self.driver,valid_max_username,valid_max_password)
+        judge_results(self.driver,element_nickname,valid_max_username,valid_max_password)
 
     def test_login_valid_min(self):
         """ 3. MinLength username and password.  """
         login(self.driver,valid_min_username,valid_min_password)
-        
+        judge_results(self.driver,element_nickname,valid_min_username,valid_min_password)
+    
     def test_login_empty(self):
         """ 4. Null or Empty """
-        username,password = " "," "
-        login(self.driver,username,password)
+        empty_user = ""
+        empty_passwd = "" 
+        login(self.driver,empty_user,empty_passwd)
+        judge_results(self.driver,element_msg_error,empty_user,empty_passwd)
 
+    @unittest.skip("No Run") 
     def test_login_validuser(self):
         """ 5. Correct username, wrong password. """
         login(self.driver,valid_username,invalid_random_password)
 
+    @unittest.skip("No Run") 
     def test_login_passwd_input_count(self):
         """ 6. 多次输入错误密码，验证错误密码上限. """
         for count in range(passwd_input_limits_count):
             login(self.driver,valid_username,invalid_random_password)
 
+def suite():
+    tests = [ 
+                "test_login_valid",
+                "test_login_valid_max",
+                "test_login_valid_min",
+                "test_login_empty",
+                "test_login_validuser",
+                "test_login_passwd_input_count"
+            ]
+    return unittest.TestSuite(map(TestLogin,tests))
+
 if __name__ == "__main__":
-    unittest.main()
+    unittest.TextTestRunner().run(suite())
