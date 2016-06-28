@@ -28,20 +28,25 @@ valid_max_password = "2016201720182019test"
 valid_min_username = "te_1"
 valid_min_password = "abc!@#"
 
-#use xpath element
-element_msg_error = "//div[@class='msg-error']"
-element_nickname = "//ul/li[@id='ttbar-login']/a[1]"
-
-
 #错误数据
 invalid_random_password = ''.join(random.sample(valid_password,len(valid_password)))
 
 #密码错误The input TestData:次数限制
 passwd_input_limits_count = 6
 
-def judge_results(driver,element,username,password):
+#use xpath element
+check_element_login_fail = "//div[@class='msg-error']"
+check_element_login_success = "//ul/li[@id='ttbar-login']/a[1]"
+
+def login(driver,check_element,username,password):
+    driver.get(url)
+    assert "京东-欢迎登录" in driver.title
+    driver.find_element_by_xpath("//div/input[@id='loginname']").send_keys(username)
+    driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
+    driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
+ 
     try:
-        text = driver.find_element_by_xpath(element).text       
+        text = driver.find_element_by_xpath(check_element).text       
         assert text is not None
     except:
         print(u" -> Test_Input: {0},{1} \n\tTest_Run,return: {2} \n\tTest_Results_judge: 不符合预期结果,测试失败." \
@@ -49,14 +54,6 @@ def judge_results(driver,element,username,password):
     else:
         print(u" -> Test_Input: {0},{1} \n\tTest_Run,return: {2} \n\tTest_Results_judge: 符合预期结果,测试通过." \
                     .format(username,password,text)) 
-
-def login(driver,username,password):
-    driver.get(url)
-    assert "京东-欢迎登录" in driver.title
-    driver.find_element_by_xpath("//div/input[@id='loginname']").send_keys(username)
-    driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
-    driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
- 
             
 class TestEnvironment(unittest.TestCase):
 
@@ -70,25 +67,21 @@ class TestLogin(TestEnvironment):
 
     def test_login_valid(self):
         """ 1. correct username and password. """
-        login(self.driver,valid_username,valid_password)
-        judge_results(self.driver,element_nickname,valid_username,valid_password)
+        login(self.driver,check_element_login_success,valid_username,valid_password)
 
     def test_login_valid_max(self):
         """ 2. MaxLength username and password. """
-        login(self.driver,valid_max_username,valid_max_password)
-        judge_results(self.driver,element_nickname,valid_max_username,valid_max_password)
+        login(self.driver,check_element_login_success,valid_max_username,valid_max_password)
 
     def test_login_valid_min(self):
         """ 3. MinLength username and password.  """
-        login(self.driver,valid_min_username,valid_min_password)
-        judge_results(self.driver,element_nickname,valid_min_username,valid_min_password)
+        login(self.driver,check_element_login_success,valid_min_username,valid_min_password)
     
     def test_login_empty(self):
         """ 4. Null or Empty """
         empty_user = ""
         empty_passwd = "" 
-        login(self.driver,empty_user,empty_passwd)
-        judge_results(self.driver,element_msg_error,empty_user,empty_passwd)
+        login(self.driver,check_element_login_fail,empty_user,empty_passwd)
 
     @unittest.skip("No Run") 
     def test_login_validuser(self):
