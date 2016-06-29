@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
+__author__ = 'wan'
+
 import os,sys
 import string
 import time
@@ -13,6 +15,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+"""
+ 关于京东账号登录的测试脚本.
+"""
 
 url = 'https://passport.jd.com/new/login.aspx'
 
@@ -71,6 +77,9 @@ class TestEnvironment(unittest.TestCase):
 
 class TestLogin(TestEnvironment):
 
+    """
+    京东自身用户账号
+    """
     def test_login_valid(self):
         """ 1. correct username and password. """
         login(self.driver,check_element_login_success,valid_username,valid_password)
@@ -99,6 +108,27 @@ class TestLogin(TestEnvironment):
         """ 6. 多次输入错误密码，验证错误密码上限. """
         for count in range(passwd_input_limits_count):
             login(self.driver,valid_username,invalid_random_password)
+
+    def test_login_auto(self):
+        """ 7. 自动登录功能 """
+        pass
+
+
+class TestLoginCooperationAccount(TestEnvironment):
+
+    """
+    合作网站账号登陆，主要有QQ、微信
+    """
+
+    def test_login_qq():
+        pass
+
+    def test_login_wx():
+        pass
+
+    def test_login_jdpay():
+        pass
+
 
 def suite():
     tests = [ 
