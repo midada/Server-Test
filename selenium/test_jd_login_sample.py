@@ -9,6 +9,7 @@ import random
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
@@ -41,6 +42,7 @@ check_element_login_success = "//ul/li[@id='ttbar-login']/a[1]"
 
 def login(driver,check_element,username,password):
     driver.get(url)
+    driver.implicitly_wait(10)
     assert "京东-欢迎登录" in driver.title
     driver.find_element_by_xpath("//div/input[@id='loginname']").send_keys(username)
     driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
