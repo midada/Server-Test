@@ -13,8 +13,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 """
  关于京东账号登录的测试脚本.
@@ -61,10 +61,10 @@ def login(driver,check_element,username,password):
         print(u"-> 没有定位到元素.请检查测试输入数据或重新定位元素.")
     except:
         text = driver.find_element_by_xpath(check_element).text 
-        print(u"-> Test_Input: {0},{1} \n  Test_Run,return: {2} \n  Test_Results_judge: 不符合预期结果,测试失败." \
+        print(u"-> Test_Input: {0},{1} \n   Test_Run,return: {2} \n   Test_Results_judge: 不符合预期结果,测试失败." \
                      .format(username,password,text))
     else:
-        print(u"-> Test_Input: {0},{1} \n  Test_Run,return: {2} \n  Test_Results_judge: 符合预期结果,测试通过." \
+        print(u"-> Test_Input: {0},{1} \n   Test_Run,return: {2} \n   Test_Results_judge: 符合预期结果,测试通过." \
                      .format(username,password,text)) 
             
 class TestEnvironment(unittest.TestCase):
