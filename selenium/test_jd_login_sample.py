@@ -14,8 +14,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
-#reload(sys)
-#sys.setdefaultencoding('utf-8')
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 """
  关于京东账号登录的测试脚本.
@@ -30,8 +31,8 @@ passwd_max_length = 20
 passwd_min_length = 6
 
 #set username and password
-valid_username = "18501185504"
-valid_password = "abc!@#"
+valid_username = "daofawk@gmail.com"
+valid_password = "Gw(wu1feng2)!@"
 valid_max_username = "test2016201720182019"
 valid_max_password = "2016201720182019test"
 valid_min_username = "te_1"
@@ -54,6 +55,7 @@ def login(driver,check_element,username,password):
     driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
     driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
     print("------------------------------------------------------------------")
+
     try:
         text = driver.find_element_by_xpath(check_element).text       
         assert text is not None
@@ -70,7 +72,8 @@ def login(driver,check_element,username,password):
 class TestEnvironment(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        #self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome('C:\Program Files (x86)\Google\Chrome\Application\chromedriver')
         self.driver.get(url)
 
     def tearDown(self):
@@ -112,13 +115,11 @@ class TestLogin(TestEnvironment):
             login(self.driver,valid_username,invalid_random_password)
 
     def test_login_auto(self):
-        """ 7. 自动登录功能 """
-        self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").is_selected()
+        """ 7. Auto login Test """
+        login(self.driver,check_element_login_success,valid_username,valid_password)
+        if self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").is_selected() != 1:
+            self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").click()
         #self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").is_enabled()
-        #self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").getAttribute("checked").equals("true")
-        #is_checked(self,"//div/span[1]/input[@id='autoLogin']")
-        #assertSelectedValue("//div[@class='safe']/span[1]/input[@id='autologin']",True)
-
 
 class TestLoginCooperationAccount(TestEnvironment):
 
