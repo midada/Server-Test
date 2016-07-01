@@ -31,8 +31,8 @@ passwd_max_length = 20
 passwd_min_length = 6
 
 #set username and password
-valid_username = "daofawk@gmail.com"
-valid_password = "Gw(wu1feng2)!@"
+valid_username = "dingding"
+valid_password = "dingding"
 valid_max_username = "test2016201720182019"
 valid_max_password = "2016201720182019test"
 valid_min_username = "te_1"
@@ -53,21 +53,27 @@ def login(driver,check_element,username,password):
     assert "京东-欢迎登录" in driver.title
     driver.find_element_by_xpath("//div/input[@id='loginname']").send_keys(username)
     driver.find_element_by_xpath("//div/input[@id='nloginpwd']").send_keys(password)
+
+    auto_login = driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']")
+    if auto_login.is_selected() != 1:
+            auto_login.click()
+
     driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
+
     print("------------------------------------------------------------------")
 
     try:
-        text = driver.find_element_by_xpath(check_element).text       
-        assert text is not None
+        e_text = driver.find_element_by_xpath(check_element).text      
+        assert e_text is not None
     except NoSuchElementException:
-        print(u"-> 没有定位到元素.请检查测试输入数据或重新定位元素.")
+        print(u"-> 没有定位到元素.请检查测试输入或重新定位元素.")
     except:
-        text = driver.find_element_by_xpath(check_element).text 
+        f_text = driver.find_element_by_xpath(check_element).text 
         print(u"-> Test_Input: {0},{1} \n   Test_Run,return: {2} \n   Test_Results_judge: 不符合预期结果,测试失败." \
-                     .format(username,password,text))
+                     .format(username,password,f_text))
     else:
         print(u"-> Test_Input: {0},{1} \n   Test_Run,return: {2} \n   Test_Results_judge: 符合预期结果,测试通过." \
-                     .format(username,password,text)) 
+                     .format(username,password,e_text)) 
             
 class TestEnvironment(unittest.TestCase):
 
@@ -84,26 +90,26 @@ class TestLogin(TestEnvironment):
     """
     京东自身用户账号
     """
-    @unittest.skip("No Run") 
+ 
     def test_login_valid(self):
         """ 1. correct username and password. """
         login(self.driver,check_element_login_success,valid_username,valid_password)
-    @unittest.skip("No Run") 
+   
     def test_login_valid_max(self):
         """ 2. MaxLength username and password. """
         login(self.driver,check_element_login_success,valid_max_username,valid_max_password)
-    @unittest.skip("No Run") 
+    
     def test_login_valid_min(self):
         """ 3. MinLength username and password.  """
         login(self.driver,check_element_login_success,valid_min_username,valid_min_password)
-    @unittest.skip("No Run") 
+    
     def test_login_empty(self):
         """ 4. Null or Empty """
         empty_user = ""
         empty_passwd = "" 
         login(self.driver,check_element_login_fail,empty_user,empty_passwd)
 
-    @unittest.skip("No Run") 
+     
     def test_login_validuser(self):
         """ 5. Correct username, wrong password. """
         login(self.driver,valid_username,invalid_random_password)
@@ -117,8 +123,6 @@ class TestLogin(TestEnvironment):
     def test_login_auto(self):
         """ 7. Auto login Test """
         login(self.driver,check_element_login_success,valid_username,valid_password)
-        if self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").is_selected() != 1:
-            self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").click()
         #self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").is_enabled()
 
 class TestLoginCooperationAccount(TestEnvironment):
