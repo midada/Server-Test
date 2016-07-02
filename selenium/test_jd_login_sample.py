@@ -99,45 +99,37 @@ class TestEnvironment(unittest.TestCase):
 class TestLogin(TestEnvironment):
     """Test Scenario: On jd account of the Software Testing."""
 
-    # TestCase 01: Correct username and password.
     def test_login_valid(self):
-        print("1. correct username and password.")
+        """ TestCase 01: Correct username and password."""
         login(self.driver,check_element_login_success,valid_username,valid_password)
    
-    # TestCase 02: Correct MaxLength username, Correct MaxLength password.
     def test_login_valid_max(self):
-        print("2. MaxLength username and password.")
+        """ TestCase 02: Correct MaxLength username, Correct MaxLength password."""
         login(self.driver,check_element_login_success,valid_max_username,valid_max_password)
     
-    # TestCase 03: Correct MinLength username, MinLengthpassword.
     def test_login_valid_min(self):
-        print("3. MinLength username and password.")
+        """ TestCase 03: Correct MinLength username, MinLengthpassword."""
         login(self.driver,check_element_login_success,valid_min_username,valid_min_password)
-    
-    # TestCase 04: 多次输入错误密码，验证错误密码上限.
+  
     #@unittest.skip("No Run") 
     def test_login_passwd_input_count(self):
-        print("6. 多次输入错误密码，验证错误密码上限.")
+        """ TestCase 04: 多次输入错误密码，验证错误密码上限."""
         for count in range(passwd_input_limits_count):
             login(self.driver,check_element_login_fail,valid_username,invalid_random_password)
             self.driver.refresh()
 
-    # TestCase 05: Null or Empty.
     def test_login_empty(self):
-        print("4. Null or Empty.")
+        """ TestCase 05: Null or Empty."""
         empty_user = ""
         empty_passwd = "" 
         login(self.driver,check_element_login_fail,empty_user,empty_passwd)
 
-    # TestCase 06: Correct username, wrong password.
     def test_login_validuser(self):
-        print("5. Correct username, wrong password.")
+        """ TestCase 06: Correct username, wrong password."""
         login(self.driver,check_element_login_fail,valid_username,invalid_random_password)
 
-
-    # TestCase 07: WebStie LoginPage, AutoLogin checkbox.
     def test_login_auto(self):
-        print("7. Auto login Test.")
+        """ TestCase 07: WebStie LoginPage, AutoLogin checkbox."""
         login(self.driver,check_element_login_success,valid_username,valid_password)
         #self.driver.find_element_by_xpath("//div/span[1]/input[@id='autoLogin']").is_enabled()
 
@@ -146,8 +138,9 @@ class TestLoginCooperationAccount(TestEnvironment):
     合作网站账号登陆，主要有QQ、微信.
     """
     
-    # TestCase 01: QQ login
     def test_login_qq(self):
+        """ TestCase 01: QQ login."""
+
         driver = self.driver
         driver.find_element_by_xpath("//ul/li[2]/a").click()
 
@@ -160,16 +153,19 @@ class TestLoginCooperationAccount(TestEnvironment):
         driver.find_element_by_xpath("//div[@class='submit']/a/input[@id='login_button']").click()
         time.sleep(5)
  
-    # TestCase 02: wx login
     def test_login_wx():
+        """  TestCase 02: wx login."""
+
         pass
 
-    # TestCase 03: jd wallt login
     def test_login_jdpay():
+        """ TestCase 03: jd wallt login."""
+
         pass
 
 
-def suite():
+#组织测试用例
+def suite_jd():
     tests = [ 
                 "test_login_valid",
                 "test_login_valid_max",
@@ -181,12 +177,13 @@ def suite():
             ]
     return unittest.TestSuite(map(TestLogin,tests))
 
-def suite_1():
+def suite_cpt():
     tests = [ 
                 "test_login_qq"
             ]
     return unittest.TestSuite(map(TestLoginCooperationAccount,tests))
 
+
 if __name__ == "__main__":
-    #unittest.TextTestRunner().run(suite())
-    unittest.TextTestRunner().run(suite_1())
+    unittest.TextTestRunner(verbosity=2).run(suite_jd())
+    unittest.TextTestRunner(verbosity=2).run(suite_cpt())
