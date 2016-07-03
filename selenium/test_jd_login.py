@@ -59,7 +59,7 @@ def login(driver,check_element,username,password):
 
     driver.find_element_by_xpath("//div/a[@id='loginsubmit']").click()
 
-    print("------------------------------------------------------------------")
+    print("\n------------------------------------------------------------------")
 
     try:
         e_text = driver.find_element_by_xpath(check_element).text      
