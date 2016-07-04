@@ -24,18 +24,19 @@ area_number = [ '%04d' % an for an in range(10000) ]
 user_number = '8888'
 
 #定义URL
-firstregister_url = 'http://114.113.126.8:81/api/v3/firstregister/common/'
+#注册第一步：输入手机号、验证码
+firstregister_url = 'http://192.168.1.100/api/v3/firstregister/common/'
 firstregister_data = { 
                         "identifyingcode": "1234",
                         "phonenumber": "13921788889"
                     }
-register_url = 'http://114.113.126.8:81/api/v3/register/common/'
+#注册第二步：输入昵称
+register_url = 'http://192.168.1.100/api/v3/register/common/'
 register_data = {
                     "nickname": "mobile77744s",
                     "password": "a123456",
                     "phonenumber": "13921718889"
                 }
-
 
 def interface_test(url,data):
     json_data = json.dumps(data)
