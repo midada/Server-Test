@@ -1,6 +1,10 @@
 
 # Sql: 关于时间与日期
 
+##### 今天
+
+`TO_DAYS(createTime)=TO_DAYS(now())`
+
 ##### 本月
 
 `DATE_FORMAT(t_orders.createTime,'%Y-%m')=DATE_FORMAT((now()),'%Y-%m')`
